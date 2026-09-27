@@ -8,5 +8,3 @@ def sheer_meters(window_w, window_h, fullness, hem_top, hem_bottom, fabric_width
     if fabric_width is None or float(fabric_width) <= 0:
         raise ValueError("fabric width required")
     return fabric_meters(window_w, window_h, float(fullness), hem_top, hem_bottom, fabric_width)
-
-# Open-path / persist readers may reshape sheer meters independently.

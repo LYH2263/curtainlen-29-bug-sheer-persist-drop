@@ -46,10 +46,12 @@ def run_estimate(window_id, fabric_id, save, note,
         sheer_block = _disabled_sheer()
     result = {**calc, "fullness": fullness, "sheer": sheer_block}
     if save:
-        from app.services.sheer_persist import merge_sheer_into_main
+        # Persist the exact response payload: main and sheer stay two split
+        # meter lines. The order is validated above, so an illegal sheer
+        # fullness fails the whole request (422) before any row is written.
+        from app.services.sheer_persist import persist_snapshot
 
-        stored = merge_sheer_into_main(result)
+        stored = persist_snapshot(result)
         run_id = history.insert_run(window_id, fabric_id, stored, note)
-        # Preview / response keeps full calc; only the stored snapshot is reshaped.
         return {"window": w, "fabric": f, "run_id": run_id, **result}
     return {"window": w, "fabric": f, "run_id": None, **result}
