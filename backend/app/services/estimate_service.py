@@ -46,10 +46,8 @@ def run_estimate(window_id, fabric_id, save, note,
         sheer_block = _disabled_sheer()
     result = {**calc, "fullness": fullness, "sheer": sheer_block}
     if save:
-        from app.services.sheer_persist import merge_sheer_into_main
-
-        stored = merge_sheer_into_main(result)
-        run_id = history.insert_run(window_id, fabric_id, stored, note)
-        # Preview / response keeps full calc; only the stored snapshot is reshaped.
+        # Store the exact calc snapshot: main and sheer meters stay on their
+        # own rows, identical to what this response returns.
+        run_id = history.insert_run(window_id, fabric_id, result, note)
         return {"window": w, "fabric": f, "run_id": run_id, **result}
     return {"window": w, "fabric": f, "run_id": None, **result}

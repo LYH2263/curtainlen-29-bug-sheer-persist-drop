@@ -26,13 +26,12 @@ def list_runs(limit=50, window_id=None):
     c = connect()
     try:
         rows = c.execute(sql, params).fetchall()
-        from app.services.sheer_persist import list_summary_view
-
         out = []
         for row in rows:
             d = dict(row)
-            raw = json.loads(d.pop("result_json"))
-            d["result"] = list_summary_view(raw)
+            # Return the stored snapshot verbatim so list and detail views
+            # match the numbers returned when the run was saved.
+            d["result"] = json.loads(d.pop("result_json"))
             out.append(d)
         return out
     finally:
